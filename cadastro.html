@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cadastre seu endereço  para receber seu produto | Gold</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f4f4;
+}
+
+.header {
+  background: linear-gradient(135deg, #b3001b, #e0002b);
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2b2b2b;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #e0002b;
+}
+
+.button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 16px;
+  border: none;
+  border-radius: 40px;
+  background: linear-gradient(135deg, #b3001b, #e0002b);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 15px 30px rgba(224,0,43,0.4);
+}
+
+.button:hover {
+  opacity: 0.95;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 40px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Dados para Entrega</h1>
+</div>
+
+<div class="container">
+
+  <!-- ENDEREÇO -->
+  <div class="section-title">Endereço</div>
+
+  <div class="field">
+    <label>Nome completo</label>
+    <input type="text" placeholder="Digite seu nome">
+  </div>
+
+  <div class="field">
+    <label>CEP</label>
+    <input type="text" placeholder="00000-000">
+  </div>
+
+  <div class="field">
+    <label>Rua</label>
+    <input type="text" placeholder="Rua / Avenida">
+  </div>
+
+  <div class="field">
+    <label>Número</label>
+    <input type="text" placeholder="Número">
+  </div>
+
+  <div class="field">
+    <label>Bairro</label>
+    <input type="text" placeholder="Bairro">
+  </div>
+
+  <div class="field">
+    <label>Cidade</label>
+    <input type="text" placeholder="Cidade">
+  </div>
+
+  <div class="field">
+    <label>Estado</label>
+    <input type="text" placeholder="Estado">
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- EMAIL -->
+  <div id="email">
+    <div class="section-title">Contato</div>
+
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" placeholder="seuemail@email.com">
+    </div>
+
+<a href="/pagamento.html" style="text-decoration:none;">
+  <button class="button">
+    receber produto Gold
+  </button>
+</a>
+  </div>
+
+</div>
+
+<script>
+function irParaEmail() {
+  document.getElementById("email").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+</script>
+
+</body>
+</html>

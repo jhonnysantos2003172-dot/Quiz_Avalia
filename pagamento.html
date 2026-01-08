@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Oferta Especial</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{margin:0;background:#f2f2f2}
+
+/* 🔴 BANNER */
+.banner{
+  background:#c90000;
+  color:#fff;
+  text-align:center;
+  padding:16px;
+  font-weight:900;
+  font-size:20px;
+  animation:piscar 1s infinite
+}
+@keyframes piscar{0%{opacity:1}50%{opacity:.6}100%{opacity:1}}
+.timer{font-size:16px;margin-top:6px}
+
+/* CARD */
+.container{display:flex;justify-content:center;padding:20px}
+.card{
+  background:#fff;
+  width:100%;
+  max-width:420px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  padding:20px
+}
+
+.produto-img{
+  width:70%;
+  border-radius:10px;
+  margin: 0 auto 15px;
+  display: block;
+}
+.titulo{text-align:center;font-size:18px;font-weight:bold;margin-bottom:10px}
+
+/* PREÇOS */
+.preco-antigo{
+  text-align:center;
+  color:#999;
+  text-decoration:line-through;
+  font-size:15px
+}
+.preco-novo{
+  text-align:center;
+  color:#c90000;
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:10px
+}
+
+/* ➖➕ */
+.quantidade{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:15px 0
+}
+.quantidade button{
+  width:32px;
+  height:32px;
+  border:none;
+  background:#c90000;
+  color:#fff;
+  font-size:18px;
+  border-radius:6px;
+  cursor:pointer
+}
+.quantidade span{
+  margin:0 14px;
+  font-size:18px;
+  font-weight:bold
+}
+
+.total{
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  color:#c90000;
+  margin-bottom:10px
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ccc
+}
+
+.btn{
+  width:100%;
+  padding:14px;
+  background:#c90000;
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  border:none;
+  border-radius:8px;
+  cursor:pointer
+}
+.btn:hover{background:#a70000}
+
+.footer{text-align:center;font-size:12px;color:#999;margin-top:10px}
+</style>
+</head>
+
+<body>
+
+<div class="banner">
+  CORRA, ANTES QUE A OFERTA ACABE!
+  <div class="timer" id="timer">10:00</div>
+</div>
+
+<div class="container">
+<div class="card">
+
+<img src="produto.webp" class="produto-img">
+
+<div class="titulo">Gold Spineli – Tônico Poderoso</div>
+
+<div class="preco-antigo">De R$ 99,80</div>
+<div class="preco-novo">Por R$ 49,90</div>
+
+<div class="quantidade">
+  <button onclick="menos()">−</button>
+  <span id="qtd">1</span>
+  <button onclick="mais()">+</button>
+</div>
+
+<div class="total">Total: R$ <span id="total">49,90</span></div>
+
+<input id="nome" placeholder="Nome completo">
+<input id="cpf" placeholder="CPF">
+
+<button class="btn" onclick="pagar()">PAGAR COM PIX</button>
+
+<div class="footer">Pagamento 100% seguro • PIX imediato</div>
+
+</div>
+</div>
+
+<script>
+let qtd = 1;
+const preco = 49.90;
+
+function atualizar(){
+  document.getElementById("qtd").innerText = qtd;
+  document.getElementById("total").innerText =
+    (qtd*preco).toFixed(2).replace(".",",");
+}
+
+function mais(){qtd++;atualizar()}
+function menos(){if(qtd>1){qtd--;atualizar()}}
+
+// TIMER
+let tempo=600;
+setInterval(()=>{
+  if(tempo<=0)return;
+  tempo--;
+  let m=Math.floor(tempo/60);
+  let s=tempo%60;
+  document.getElementById("timer").innerText =
+    `${m}:${s<10?"0"+s:s}`;
+},1000);
+
+// PIX
+async function pagar(){
+  const nome=document.getElementById("nome").value;
+  const cpf=document.getElementById("cpf").value;
+  if(!nome||!cpf){alert("Preencha os dados");return}
+
+  const res = await fetch("/pix",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      nome,cpf,
+      quantidade:qtd,
+      valor:(qtd*preco).toFixed(2)
+    })
+  });
+
+  const data = await res.json();
+  alert("PIX gerado!\n\nCopia e Cola:\n"+data.copiaCola);
+}
+</script>
+
+</body>
+</html>
