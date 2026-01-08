@@ -8,13 +8,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("."));
 
-// Variáveis de ambiente
-const CLIENT_ID = process.env.PROPX_CLIENT_ID;
-const CLIENT_SECRET = process.env.PROPX_CLIENT_SECRET;
+// Variáveis de ambiente (OBRIGATÓRIO)
+const CLIENT_ID = process.env.PROPIX_CLIENT_ID;
+const CLIENT_SECRET = process.env.PROPIX_CLIENT_SECRET;
 
+if (!CLIENT_ID || !CLIENT_SECRET) {
+  console.error("❌ PROPIX_CLIENT_ID ou PROPIX_CLIENT_SECRET não definidos");
+}
+
+// Endpoint Propix
 const PROPIX_ENDPOINT = "https://propix-1.onrender.com/api/v1/deposit";
 
-// Rota de teste (Railway health check)
+// Health check
 app.get("/", (req, res) => {
   res.status(200).send("Servidor online 🚀");
 });
@@ -24,9 +29,14 @@ app.post("/pix", async (req, res) => {
   try {
     const { nome, cpf, valor, quantidade } = req.body;
 
-    // Validação básica (evita crash)
+    // Validações
     if (!nome || !cpf || !valor) {
       return res.status(400).json({ error: "Dados inválidos" });
+    }
+
+    const amount = Number(valor);
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Valor inválido" });
     }
 
     const response = await fetch(PROPIX_ENDPOINT, {
@@ -37,8 +47,8 @@ app.post("/pix", async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        amount: Number(valor),
-        description: `Compra ${quantidade || 1}x Gold Spineli`,
+        amount: amount,
+        description: `Compra de ${quantidade || 1} produto(s)`,
         payer: {
           name: nome,
           document: cpf
@@ -48,8 +58,22 @@ app.post("/pix", async (req, res) => {
 
     const data = await response.json();
 
+    // 🔎 Debug (remova depois se quiser)
+    console.log("Resposta Propix:", data);
+
+    // Retorno padronizado para o front
     return res.json({
-      copiaCola: data?.pix?.code || data?.qrCode || "PIX GERADO"
+      copiaCola:
+        data?.copyPaste ||
+        data?.pix?.copyPaste ||
+        data?.pix?.code ||
+        null,
+
+      qrCode:
+        data?.qrCodeBase64 ||
+        data?.pix?.qrCodeBase64 ||
+        data?.qrCode ||
+        null
     });
 
   } catch (err) {
@@ -58,7 +82,7 @@ app.post("/pix", async (req, res) => {
   }
 });
 
-// Porta dinâmica (Railway)
+// Porta dinâmica (Render)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
