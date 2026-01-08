@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagamento Pix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Biblioteca QR Code -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #000, #1a1a1a);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .pix-container {
+      background: #111;
+      border-radius: 16px;
+      padding: 24px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.25);
+      text-align: center;
+    }
+
+    h1 {
+      color: gold;
+      margin-bottom: 10px;
+    }
+
+    #qrcode {
+      margin: 20px auto;
+      background: #fff;
+      padding: 10px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+
+    textarea {
+      width: 100%;
+      height: 110px;
+      background: #000;
+      color: #0f0;
+      border: 1px solid gold;
+      border-radius: 8px;
+      padding: 10px;
+      resize: none;
+      font-size: 13px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 14px;
+      background: gold;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: #0f0;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="pix-container">
+  <h1>Pagamento Pix</h1>
+  <p>Escaneie o QR Code ou copie o código Pix</p>
+
+  <div id="qrcode"></div>
+
+  <textarea id="pixCode" readonly>Gerando Pix...</textarea>
+
+  <button onclick="copiarPix()">📋 Copiar Pix</button>
+
+  <div id="status" class="status">Pix copiado com sucesso ✔</div>
+</div>
+
+<script>
+async function gerarPix() {
+  try {
+    const response = await fetch("/pix", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nome: "Cliente Gold",
+        cpf: "00000000000",
+        valor: 10,
+        quantidade: 1
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.copiaCola) {
+      document.getElementById("pixCode").value = "Erro ao gerar Pix";
+      return;
+    }
+
+    // Mostra Pix copia e cola
+    document.getElementById("pixCode").value = data.copiaCola;
+
+    // Gera QR Code REAL a partir do Pix
+    new QRCode(document.getElementById("qrcode"), {
+      text: data.copiaCola,
+      width: 200,
+      height: 200
+    });
+
+  } catch (err) {
+    document.getElementById("pixCode").value = "Erro de conexão";
+  }
+}
+
+function copiarPix() {
+  const pix = document.getElementById("pixCode");
+  pix.select();
+  pix.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.getElementById("status").style.display = "block";
+}
+
+gerarPix();
+</script>
+
+</body>
+</html>

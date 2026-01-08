@@ -173,23 +173,24 @@ setInterval(()=>{
 
 // PIX
 async function pagar(){
-  const nome=document.getElementById("nome").value;
-  const cpf=document.getElementById("cpf").value;
-  if(!nome||!cpf){alert("Preencha os dados");return}
+  const nome = document.getElementById("nome").value;
+  const cpf = document.getElementById("cpf").value;
 
-  const res = await fetch("/pix",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      nome,cpf,
-      quantidade:qtd,
-      valor:(qtd*preco).toFixed(2)
-    })
-  });
+  if(!nome || !cpf){
+    alert("Preencha os dados");
+    return;
+  }
 
-  const data = await res.json();
-  alert("PIX gerado!\n\nCopia e Cola:\n"+data.copiaCola);
+  // salva dados para usar na tela pix.html
+  localStorage.setItem("pix_nome", nome);
+  localStorage.setItem("pix_cpf", cpf);
+  localStorage.setItem("pix_qtd", qtd);
+  localStorage.setItem("pix_valor", (qtd * preco).toFixed(2));
+
+  // redireciona para a tela do Pix
+  window.location.href = "pix.html";
 }
+
 </script>
 
 </body>
