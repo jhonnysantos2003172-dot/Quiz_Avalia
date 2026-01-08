@@ -1,4 +1,5 @@
 const express = require("express");
+const fetch = require("node-fetch");
 
 const app = express();
 app.use(express.json());
@@ -8,6 +9,10 @@ const CLIENT_ID = process.env.PROPX_CLIENT_ID;
 const CLIENT_SECRET = process.env.PROPX_CLIENT_SECRET;
 
 const PROPIX_ENDPOINT = "https://propix-1.onrender.com/api/v1/deposit";
+
+app.get("/", (req, res) => {
+  res.send("Servidor online 🚀");
+});
 
 app.post("/pix", async (req, res) => {
   try {
