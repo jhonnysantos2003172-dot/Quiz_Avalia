@@ -7,8 +7,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(".")); // serve pix.html e outros arquivos
 
 // ⚠️ Coloque suas credenciais Propix aqui
-const CLIENT_ID = "SEU_CLIENT_ID_AQUI";
-const CLIENT_SECRET = "SEU_CLIENT_SECRET_AQUI";
+const CLIENT_ID = "live_6049bd5b783a9068186db4dec078933c";
+const CLIENT_SECRET = "sk_2d0153461b7c7cd1c41aed4f8d10ebe35d31a8604e550ecd24b71446b8d35317";
 
 const PROPIX_ENDPOINT = "https://propix-1.onrender.com/api/v1/deposit";
 
