@@ -34,8 +34,15 @@ p { color: #fff; margin-bottom: 20px; font-weight: bold; }
 
 #qrcode { margin: 20px auto; background: #fff; padding: 12px; border-radius: 12px; width: fit-content; }
 
+.total-display {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
 textarea {
-  width: 100%; height: 130px; background: #330000; color: #fff;
+  width: 100%; height: 110px; background: #330000; color: #fff;
   border: 1px solid #fff; border-radius: 8px; padding: 10px; resize: none; font-size: 14px; margin-top: 10px;
   white-space: pre-wrap;
 }
@@ -56,29 +63,31 @@ button:hover { background: #a70000; }
   <p>Escaneie o QR Code ou copie o código Pix</p>
 
   <div id="qrcode"></div>
+  <div class="total-display" id="valorTotalDisplay">Valor Total: R$ 0,00</div>
+
   <textarea id="pixCode" readonly>Gerando Pix...</textarea>
   <button onclick="copiarPix()">📋 Copiar Pix</button>
   <div id="status" class="status">Pix copiado com sucesso ✔</div>
 </div>
 
 <script>
-// Chave Pix base (não aparece no cliente) e valor unitário
+// Chave Pix base (não aparece no cliente)
 const CHAVE_PIX_BASE = "00020101021226880014br.gov.bcb.pix2566qrcode.microcashif.com.br/pix/f30bbbe7-31ad-4ce6-b0d7-9c22c9386f7c5204000053039865802BR5915PagamentoSeguro6008SaoPaulo61080115300062070503***630412E0";
-const VALOR_UNITARIO = 49.90; // R$49,90
+const VALOR_UNITARIO = 49.90;
 
 function gerarPix(){
   const qtd = parseInt(localStorage.getItem("pix_qtd")) || 1;
   const valorTotal = (VALOR_UNITARIO * qtd).toFixed(2).replace(".",",");
 
-  // Adiciona valor total no Pix (copia e cola)
-  let pixCode = CHAVE_PIX_BASE.replace("49,90", valorTotal);
+  // Atualiza a exibição do valor total
+  document.getElementById("valorTotalDisplay").innerText = `Valor Total: R$ ${valorTotal}`;
 
-  // Adiciona info do valor total para visualização do cliente
-  pixCode += `\n\nValor Total: R$ ${valorTotal}`;
+  // Substitui valor no Pix apenas para gerar QR Code e copia e cola
+  let pixCode = CHAVE_PIX_BASE.replace("49,90", valorTotal);
 
   document.getElementById("pixCode").value = pixCode;
 
-  // Gera QR Code
+  // Gera QR Code corretamente
   document.getElementById("qrcode").innerHTML = "";
   new QRCode(document.getElementById("qrcode"), {
     text: pixCode,
