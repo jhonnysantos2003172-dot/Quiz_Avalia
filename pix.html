@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Pagamento Pix</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
 <style>
@@ -26,7 +25,6 @@ body{
   max-width:420px;
   text-align:center;
 }
-h1{margin-bottom:5px}
 .valor{
   font-size:22px;
   font-weight:bold;
@@ -37,7 +35,6 @@ h1{margin-bottom:5px}
   background:#fff;
   padding:10px;
   border-radius:12px;
-  width:fit-content;
 }
 textarea{
   width:100%;
@@ -71,31 +68,38 @@ button{
 
 <body>
 <div class="pix-container">
-  <h1>Pagamento Pix</h1>
+  <h2>Pagamento Pix</h2>
   <div class="valor" id="valor"></div>
-
   <div id="qrcode"></div>
-
   <textarea id="pixCode" readonly></textarea>
-
   <button onclick="copiarPix()">📋 Copiar Pix</button>
   <div id="status" class="status">Pix copiado com sucesso ✔</div>
 </div>
 
 <script>
 const pixPorValor = {
-  "49.90": "00020101021226880014br.gov.bcb.pix2566qrcode.microcashif.com.br/pix/f30bbbe7-31ad-4ce6-b0d7-9c22c9386f7c5204000053039865802BR5915PagamentoSeguro6008SaoPaulo61080115300062070503***630412E0",
-  "99.80": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/38321e15-a418-4e06-9677-9aa35fd7e33e5204000053039865802BR5908BrasilON6007Goiania62070503***6304B7D2",
-  "149.70": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/b0d704f5-e8d0-4293-bbab-ada7f41817085204000053039865802BR5908BrasilON6007Goiania62070503***630454E4",
-  "199.60": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/489502c0-de89-4163-b332-399a39d183c55204000053039865802BR5908BrasilON6007Goiania62070503***6304CCA3",
-  "249.50": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/f794dddf-9ea3-401b-bb4a-b36162ccbfc65204000053039865802BR5908BrasilON6007Goiania62070503***6304B015",
-  "299.40": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/6a26039a-e542-48de-a79b-d1c1d7c1474f5204000053039865802BR5908BrasilON6007Goiania62070503***63041ABD",
-  "349.30": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/03ffce91-75a6-4302-8462-dce0d8e3635d5204000053039865802BR5908BrasilON6007Goiania62070503***6304F69B",
-  "399.20": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/446e0762-d882-431f-8c6c-9cca681a77f65204000053039865802BR5908BrasilON6007Goiania62070503***6304D629",
-  "449.10": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/082e4e84-a7a9-4da0-a52c-b338f9b144ec5204000053039865802BR5908BrasilON6007Goiania62070503***630424DB",
-  "499.00": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/a89726c7-37bf-4298-8bfc-7bccc38af0f75204000053039865802BR5908BrasilON6007Goiania62070503***6304CF30",
-  "548.90": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/97ace810-8318-4bac-885a-1ae3d4d0f1145204000053039865802BR5908BrasilON6007Goiania62070503***630445A4",
-  "598.80": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/17cfbd60-298d-4db6-8ee4-13dfdaaf588e5204000053039865802BR5908BrasilON6007Goiania62070503***63042D27"
+  "49.90":"00020101021226880014br.gov.bcb.pix2566qrcode.microcashif.com.br/pix/f30bbbe7-31ad-4ce6-b0d7-9c22c9386f7c5204000053039865802BR5915PagamentoSeguro6008SaoPaulo61080115300062070503***630412E0",
+  "99.80":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/38321e15-a418-4e06-9677-9aa35fd7e33e5204000053039865802BR5908BrasilON6007Goiania62070503***6304B7D2",
+  "149.70":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/b0d704f5-e8d0-4293-bbab-ada7f41817085204000053039865802BR5908BrasilON6007Goiania62070503***630454E4",
+  "199.60":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/489502c0-de89-4163-b332-399a39d183c55204000053039865802BR5908BrasilON6007Goiania62070503***6304CCA3",
+  "249.50":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/f794dddf-9ea3-401b-bb4a-b36162ccbfc65204000053039865802BR5908BrasilON6007Goiania62070503***6304B015",
+  "299.40":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/6a26039a-e542-48de-a79b-d1c1d7c1474f5204000053039865802BR5908BrasilON6007Goiania62070503***63041ABD",
+  "349.30":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/03ffce91-75a6-4302-8462-dce0d8e3635d5204000053039865802BR5908BrasilON6007Goiania62070503***6304F69B",
+  "399.20":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/446e0762-d882-431f-8c6c-9cca681a77f65204000053039865802BR5908BrasilON6007Goiania62070503***6304D629",
+  "449.10":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/082e4e84-a7a9-4da0-a52c-b338f9b144ec5204000053039865802BR5908BrasilON6007Goiania62070503***630424DB",
+  "499.00":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/a89726c7-37bf-4298-8bfc-7bccc38af0f75204000053039865802BR5908BrasilON6007Goiania62070503***6304CF30",
+  "548.90":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/97ace810-8318-4bac-885a-1ae3d4d0f1145204000053039865802BR5908BrasilON6007Goiania62070503***630445A4",
+  "598.80":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/17cfbd60-298d-4db6-8ee4-13dfdaaf588e5204000053039865802BR5908BrasilON6007Goiania62070503***63042D27",
+
+  "648.70":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/c49c87a1-0115-42af-aed4-b86fd9472f915204000053039865802BR5908BrasilON6007Goiania62070503***6304F8CA",
+  "698.60":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/97742212-308f-415f-a17d-f461ec4eae235204000053039865802BR5908BrasilON6007Goiania62070503***63043473",
+  "748.50":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/e2399998-1cee-43a0-bb3c-e5f8e64e1b295204000053039865802BR5908BrasilON6007Goiania62070503***630453BF",
+  "798.40":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/4c0e6492-207c-46f2-903d-f3cb0d88f1415204000053039865802BR5908BrasilON6007Goiania62070503***63049F48",
+  "848.30":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/36bb3c73-984c-4ea8-9067-3f30ce19fdb15204000053039865802BR5908BrasilON6007Goiania62070503***63041C89",
+  "898.20":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/ca2aadaf-91f1-43e3-9cde-a12d1a506fd05204000053039865802BR5908BrasilON6007Goiania62070503***6304C92D",
+  "948.10":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/32ea4b56-461f-46c5-aa05-9692f688815e5204000053039865802BR5908BrasilON6007Goiania62070503***6304BB9E",
+  "998.00":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/6de92b2b-f20e-4042-ac8e-7bed57fc07505204000053039865802BR5908BrasilON6007Goiania62070503***63042EDC",
+  "1047.90":"00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/0e08eccd-436b-48c6-8fe7-ea6dc1c75a7d5204000053039865802BR5908BrasilON6007Goiania62070503***63047F5D"
 };
 
 function gerarPix(){
@@ -103,7 +107,7 @@ function gerarPix(){
   const pix = pixPorValor[valor];
 
   if(!pix){
-    document.getElementById("pixCode").value = "Valor inválido";
+    document.getElementById("pixCode").value = "Valor não disponível";
     return;
   }
 
@@ -111,7 +115,7 @@ function gerarPix(){
   document.getElementById("pixCode").value = pix;
 
   new QRCode(document.getElementById("qrcode"),{
-    text: pix,
+    text:pix,
     width:200,
     height:200
   });
