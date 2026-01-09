@@ -8,105 +8,123 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg,#8B0000,#330000);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(180deg,#8B0000,#330000);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
 }
-
-.pix-container {
+.pix-container{
   background:#C90000;
   border-radius:16px;
   padding:24px;
   width:90%;
   max-width:420px;
-  box-shadow:0 0 25px rgba(0,0,0,0.5);
   text-align:center;
 }
-
-h1 { color: #fff; margin-bottom: 10px; font-size: 24px; }
-p { color: #fff; margin-bottom: 20px; font-weight: bold; }
-
-#qrcode { margin: 20px auto; background: #fff; padding: 12px; border-radius: 12px; width: fit-content; }
-
-.total-display {
-  margin: 10px 0;
-  font-size: 18px;
-  font-weight: bold;
-  color: #fff;
+h1{margin-bottom:5px}
+.valor{
+  font-size:22px;
+  font-weight:bold;
+  margin:10px 0;
 }
-
-textarea {
-  width: 100%; height: 110px; background: #330000; color: #fff;
-  border: 1px solid #fff; border-radius: 8px; padding: 10px; resize: none; font-size: 14px; margin-top: 10px;
-  white-space: pre-wrap;
+#qrcode{
+  margin:20px auto;
+  background:#fff;
+  padding:10px;
+  border-radius:12px;
+  width:fit-content;
 }
-
-button {
-  margin-top: 15px; width: 100%; padding: 14px; background: #C90000; color: #fff;
-  font-weight: bold; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; transition: 0.2s;
+textarea{
+  width:100%;
+  height:110px;
+  background:#330000;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:10px;
+  resize:none;
+  font-size:13px;
 }
-button:hover { background: #a70000; }
-
-.status { margin-top: 10px; color: #0f0; display: none; font-weight: bold; }
+button{
+  margin-top:15px;
+  width:100%;
+  padding:14px;
+  background:#a70000;
+  color:#fff;
+  font-weight:bold;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+.status{
+  margin-top:10px;
+  color:#0f0;
+  display:none;
+}
 </style>
 </head>
 
 <body>
 <div class="pix-container">
   <h1>Pagamento Pix</h1>
-  <p>Escaneie o QR Code ou copie o código Pix</p>
+  <div class="valor" id="valor"></div>
 
   <div id="qrcode"></div>
-  <div class="total-display" id="valorTotalDisplay">Valor Total: R$ 0,00</div>
 
-  <textarea id="pixCode" readonly>Gerando Pix...</textarea>
+  <textarea id="pixCode" readonly></textarea>
+
   <button onclick="copiarPix()">📋 Copiar Pix</button>
   <div id="status" class="status">Pix copiado com sucesso ✔</div>
 </div>
 
 <script>
-// Chave Pix base (não aparece no cliente)
-const CHAVE_PIX_BASE = "00020101021226880014br.gov.bcb.pix2566qrcode.microcashif.com.br/pix/f30bbbe7-31ad-4ce6-b0d7-9c22c9386f7c5204000053039865802BR5915PagamentoSeguro6008SaoPaulo61080115300062070503***630412E0";
-const VALOR_UNITARIO = 49.90;
+const pixPorValor = {
+  "49.90": "00020101021226880014br.gov.bcb.pix2566qrcode.microcashif.com.br/pix/f30bbbe7-31ad-4ce6-b0d7-9c22c9386f7c5204000053039865802BR5915PagamentoSeguro6008SaoPaulo61080115300062070503***630412E0",
+  "99.80": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/38321e15-a418-4e06-9677-9aa35fd7e33e5204000053039865802BR5908BrasilON6007Goiania62070503***6304B7D2",
+  "149.70": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/b0d704f5-e8d0-4293-bbab-ada7f41817085204000053039865802BR5908BrasilON6007Goiania62070503***630454E4",
+  "199.60": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/489502c0-de89-4163-b332-399a39d183c55204000053039865802BR5908BrasilON6007Goiania62070503***6304CCA3",
+  "249.50": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/f794dddf-9ea3-401b-bb4a-b36162ccbfc65204000053039865802BR5908BrasilON6007Goiania62070503***6304B015",
+  "299.40": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/6a26039a-e542-48de-a79b-d1c1d7c1474f5204000053039865802BR5908BrasilON6007Goiania62070503***63041ABD",
+  "349.30": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/03ffce91-75a6-4302-8462-dce0d8e3635d5204000053039865802BR5908BrasilON6007Goiania62070503***6304F69B",
+  "399.20": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/446e0762-d882-431f-8c6c-9cca681a77f65204000053039865802BR5908BrasilON6007Goiania62070503***6304D629",
+  "449.10": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/082e4e84-a7a9-4da0-a52c-b338f9b144ec5204000053039865802BR5908BrasilON6007Goiania62070503***630424DB",
+  "499.00": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/a89726c7-37bf-4298-8bfc-7bccc38af0f75204000053039865802BR5908BrasilON6007Goiania62070503***6304CF30",
+  "548.90": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/97ace810-8318-4bac-885a-1ae3d4d0f1145204000053039865802BR5908BrasilON6007Goiania62070503***630445A4",
+  "598.80": "00020101021226830014br.gov.bcb.pix2561qrcode.a55scd.com.br/pix/17cfbd60-298d-4db6-8ee4-13dfdaaf588e5204000053039865802BR5908BrasilON6007Goiania62070503***63042D27"
+};
 
 function gerarPix(){
-  const qtd = parseInt(localStorage.getItem("pix_qtd")) || 1;
-  const valorTotal = (VALOR_UNITARIO * qtd).toFixed(2).replace(".",",");
+  const valor = parseFloat(localStorage.getItem("pix_valor")).toFixed(2);
+  const pix = pixPorValor[valor];
 
-  // Atualiza a exibição do valor total
-  document.getElementById("valorTotalDisplay").innerText = `Valor Total: R$ ${valorTotal}`;
+  if(!pix){
+    document.getElementById("pixCode").value = "Valor inválido";
+    return;
+  }
 
-  // Substitui valor no Pix apenas para gerar QR Code e copia e cola
-  let pixCode = CHAVE_PIX_BASE.replace("49,90", valorTotal);
+  document.getElementById("valor").innerText = "Total: R$ " + valor.replace(".",",");
+  document.getElementById("pixCode").value = pix;
 
-  document.getElementById("pixCode").value = pixCode;
-
-  // Gera QR Code corretamente
-  document.getElementById("qrcode").innerHTML = "";
-  new QRCode(document.getElementById("qrcode"), {
-    text: pixCode,
-    width: 200,
-    height: 200
+  new QRCode(document.getElementById("qrcode"),{
+    text: pix,
+    width:200,
+    height:200
   });
 }
 
 function copiarPix(){
   const pix=document.getElementById("pixCode");
   pix.select();
-  pix.setSelectionRange(0,99999);
   document.execCommand("copy");
   document.getElementById("status").style.display="block";
 }
 
-// Gera Pix automaticamente ao abrir a página
 gerarPix();
 </script>
-
 </body>
 </html>
